@@ -16,6 +16,7 @@ import (
 	"github.com/nanoncore/pon-exporter/internal/target"
 	"github.com/nanoncore/pon-exporter/internal/version"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	toolkit "github.com/prometheus/exporter-toolkit/web"
 )
@@ -53,8 +54,8 @@ func main() {
 	gponcol := collector.New(store)
 	reg := prometheus.NewRegistry()
 	reg.MustRegister(gponcol)
-	reg.MustRegister(prometheus.NewGoCollector())
-	reg.MustRegister(prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}))
+	reg.MustRegister(collectors.NewGoCollector())
+	reg.MustRegister(collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
 
 	// Start poller
 	ctx, ctxCancel := context.WithCancel(context.Background())
