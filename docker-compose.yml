@@ -1,0 +1,29 @@
+services:
+  pon-exporter:
+    build: .
+    ports:
+      - "9876:9876"
+    volumes:
+      - ./pon-exporter.yml:/etc/pon-exporter/pon-exporter.yml:ro
+    command:
+      - --config.file=/etc/pon-exporter/pon-exporter.yml
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - pon-exporter
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus

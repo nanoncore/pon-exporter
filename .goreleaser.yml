@@ -1,0 +1,65 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - main: ./cmd/pon-exporter
+    binary: pon-exporter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/nanoncore/pon-exporter/internal/version.Version={{.Version}}
+      - -X github.com/nanoncore/pon-exporter/internal/version.Revision={{.Commit}}
+      - -X github.com/nanoncore/pon-exporter/internal/version.Branch={{.Branch}}
+      - -X github.com/nanoncore/pon-exporter/internal/version.BuildDate={{.Date}}
+
+archives:
+  - formats:
+      - tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/nanoncore/pon-exporter:{{ .Version }}-amd64"
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+    dockerfile: Dockerfile
+    goos: linux
+    goarch: amd64
+  - image_templates:
+      - "ghcr.io/nanoncore/pon-exporter:{{ .Version }}-arm64"
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+    dockerfile: Dockerfile
+    goos: linux
+    goarch: arm64
+
+docker_manifests:
+  - name_template: "ghcr.io/nanoncore/pon-exporter:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/nanoncore/pon-exporter:{{ .Version }}-amd64"
+      - "ghcr.io/nanoncore/pon-exporter:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/nanoncore/pon-exporter:latest"
+    image_templates:
+      - "ghcr.io/nanoncore/pon-exporter:{{ .Version }}-amd64"
+      - "ghcr.io/nanoncore/pon-exporter:{{ .Version }}-arm64"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"

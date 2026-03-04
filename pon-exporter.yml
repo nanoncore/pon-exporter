@@ -1,0 +1,26 @@
+poll_interval: 5m
+
+targets:
+  - name: olt-rack1
+    vendor: vsol
+    protocol: cli
+    address: 192.168.1.1
+    port: 22
+    username: admin
+    password: admin
+    timeout: 30s
+    labels:
+      site: main-pop
+      rack: "1"
+
+  - name: olt-rack2
+    vendor: huawei
+    protocol: snmp
+    address: 192.168.1.2
+    port: 161
+    snmp_community: public
+    snmp_version: "2c"
+    timeout: 60s
+    labels:
+      site: main-pop
+      rack: "2"
