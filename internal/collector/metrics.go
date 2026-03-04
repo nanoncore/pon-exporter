@@ -25,11 +25,6 @@ var (
 		"Total number of poll errors for a target.",
 		[]string{"target"}, nil,
 	)
-	descTargetInfo = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, "", "target_info"),
-		"Static target information labels. Value is always 1.",
-		[]string{"target"}, nil, // extra labels added dynamically
-	)
 	descOLTInfo = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "olt", "info"),
 		"Static OLT information. Value is always 1.",

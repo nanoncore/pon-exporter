@@ -34,6 +34,9 @@ dockers:
     use: buildx
     build_flag_templates:
       - "--platform=linux/amd64"
+      - "--build-arg=VERSION={{ .Version }}"
+      - "--build-arg=REVISION={{ .Commit }}"
+      - "--build-arg=BRANCH={{ .Branch }}"
     dockerfile: Dockerfile
     goos: linux
     goarch: amd64
@@ -42,6 +45,9 @@ dockers:
     use: buildx
     build_flag_templates:
       - "--platform=linux/arm64"
+      - "--build-arg=VERSION={{ .Version }}"
+      - "--build-arg=REVISION={{ .Commit }}"
+      - "--build-arg=BRANCH={{ .Branch }}"
     dockerfile: Dockerfile
     goos: linux
     goarch: arm64

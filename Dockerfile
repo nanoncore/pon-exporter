@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 go build \
       -X github.com/nanoncore/pon-exporter/internal/version.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
     -o /pon-exporter ./cmd/pon-exporter
 
-FROM alpine:3.20
+FROM alpine:3.21
 RUN apk add --no-cache ca-certificates tzdata
 COPY --from=builder /pon-exporter /usr/local/bin/pon-exporter
 

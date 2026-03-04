@@ -50,6 +50,7 @@ func Poll(ctx context.Context, cfg config.TargetConfig, logger *slog.Logger) *po
 	driver, err := southbound.NewDriver(eqCfg.Vendor, eqCfg.Protocol, eqCfg)
 	if err != nil {
 		logger.Error("failed to create driver", "target", cfg.Name, "err", err)
+		snap.ErrorCount++
 		snap.Duration = time.Since(start)
 		return snap
 	}
@@ -60,6 +61,7 @@ func Poll(ctx context.Context, cfg config.TargetConfig, logger *slog.Logger) *po
 
 	if err := driver.Connect(connectCtx, eqCfg); err != nil {
 		logger.Error("failed to connect", "target", cfg.Name, "err", err)
+		snap.ErrorCount++
 		snap.Duration = time.Since(start)
 		return snap
 	}
