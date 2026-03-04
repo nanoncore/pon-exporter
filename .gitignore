@@ -1,4 +1,4 @@
-pon-exporter
+/pon-exporter
 dist/
 *.exe
 *.test
