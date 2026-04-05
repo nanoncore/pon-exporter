@@ -8,10 +8,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// AuthConfig holds WalletConnect SIWE authentication settings.
+type AuthConfig struct {
+	ProjectID        string   `yaml:"project_id"`
+	AllowedAddresses []string `yaml:"allowed_addresses,omitempty"`
+	SessionTTL       Duration `yaml:"session_ttl,omitempty"`
+}
+
 // Config is the top-level configuration.
 type Config struct {
 	PollInterval Duration         `yaml:"poll_interval"`
 	Targets      []TargetConfig   `yaml:"targets"`
+	Auth         *AuthConfig      `yaml:"auth,omitempty"`
 }
 
 // TargetConfig defines a single OLT target.

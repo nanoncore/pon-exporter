@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/alecthomas/kingpin/v2"
+	"github.com/nanoncore/pon-exporter/internal/auth"
 	"github.com/nanoncore/pon-exporter/internal/collector"
 	"github.com/nanoncore/pon-exporter/internal/config"
 	"github.com/nanoncore/pon-exporter/internal/poller"
@@ -95,9 +96,20 @@ func main() {
 </body></html>`)
 	})
 
+	// Wrap with WalletConnect SIWE auth if configured.
+	var handler http.Handler = mux
+	if cfg.Auth != nil {
+		handler = auth.New(mux, &auth.Config{
+			ProjectID:        cfg.Auth.ProjectID,
+			AllowedAddresses: cfg.Auth.AllowedAddresses,
+			SessionTTL:       auth.Duration(cfg.Auth.SessionTTL),
+		}, logger)
+		logger.Info("walletconnect auth enabled")
+	}
+
 	server := &http.Server{
 		Addr:    *listenAddress,
-		Handler: mux,
+		Handler: handler,
 	}
 
 	// Signal handling
